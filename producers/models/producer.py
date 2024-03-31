@@ -5,7 +5,7 @@ import time
 
 from confluent_kafka import avro
 from confluent_kafka.admin import AdminClient, NewTopic
-from confluent_kafka.avro import AvroProducer
+from confluent_kafka.avro import AvroProducer, CachedSchemaRegistryClient
 
 logger = logging.getLogger(__name__)
 
@@ -72,10 +72,13 @@ class Producer:
         aclient = AdminClient({"bootstrap.servers": self.broker_properties['URL_BROKER']})
         topic = NewTopic(topic = self.topic_name,num_partitions=self.num_partitions,replication_factor = self.num_replicas)
         
-        futures = client.create_topics([topic])
+        futures = aclient.create_topics([topic])
         
-        t, f in futures.items(): future.result()
-        
+        for t, f in futures.items(): 
+            try:
+                f.result()
+            except Exception as e:
+                logger.warn(e)
         
         #logger.info("topic creation kafka integration incomplete - skipping")
 

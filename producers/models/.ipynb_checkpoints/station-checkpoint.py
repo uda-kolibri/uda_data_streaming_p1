@@ -62,7 +62,7 @@ class Station(Producer):
         # TODO: Complete this function by producing an arrival message to Kafka
         #
         #
-        logger.info("arrival kafka integration incomplete - skipping")
+        #logger.info("arrival kafka integration incomplete - skipping")
         self.producer.produce(
             key_schema=self.key_schema,
             value_schema=self.value_schema,
